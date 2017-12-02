@@ -1,14 +1,20 @@
 package ru.codemonkeystudio.olld40.objects;
 
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+
 public class Grid {
     public Tile grid[][];
 
-    public Grid() {
+    public Grid(TiledMap map) {
         grid = new Tile[5][5];
-        for (int i = 0; i < grid[0].length; i++) {
-            for (int j = 0; j < grid.length; j++) {
-                grid[j][i] = new Tile(0f, 0f, 0);
-            }
+        for (Object object : map.getLayers().get("walls").getObjects().getByType(RectangleMapObject.class)) {
+            RectangleMapObject mapObject = (RectangleMapObject) object;
+            Rectangle rect = mapObject.getRectangle();
+            grid
+                    [Integer.parseInt(mapObject.getName().substring(0, 0))]
+                    [Integer.parseInt(mapObject.getName().substring(1, 1))] = new Tile(rect.getX(), rect.getY(), 0);
         }
     }
 }
