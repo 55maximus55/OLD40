@@ -3,12 +3,21 @@ package ru.codemonkeystudio.olld40.screens
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import ru.codemonkeystudio.olld40.CMSGame
 import ru.codemonkeystudio.olld40.objects.Grid
 import ru.codemonkeystudio.olld40.tools.ContactListener
 import ru.codemonkeystudio.olld40.tools.ControlHandler
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.physics.box2d.FixtureDef
+import com.badlogic.gdx.physics.box2d.PolygonShape
+
+
 
 class GameScreen(game: CMSGame) : Screen {
     lateinit var batch : SpriteBatch
@@ -20,6 +29,9 @@ class GameScreen(game: CMSGame) : Screen {
     lateinit var shape : CircleShape
     lateinit var bDef : BodyDef
     lateinit var fDef : FixtureDef
+
+    lateinit var map : TiledMap
+    lateinit var mapRenderer : OrthogonalTiledMapRenderer
 
     lateinit var grid : Grid
 
@@ -44,7 +56,12 @@ class GameScreen(game: CMSGame) : Screen {
         fDef = FixtureDef()
         fDef.shape = shape
 
+
+        map = TmxMapLoader().load("map.tmx")
+        mapRenderer = OrthogonalTiledMapRenderer(map)
         grid = Grid()
+
+        createWalls()
     }
 
     override fun render(delta: Float) {
@@ -53,7 +70,9 @@ class GameScreen(game: CMSGame) : Screen {
         camera.update()
 
         world.step(delta, 10, 10)
+        mapRenderer.setView(camera)
 
+        mapRenderer.render()
         debugRenderer.render(world, camera.combined)
 
         if (ControlHandler.useKeyJustPressed()) {
@@ -79,5 +98,26 @@ class GameScreen(game: CMSGame) : Screen {
     }
 
     override fun dispose() {
+    }
+
+    private fun createWalls() {
+        val bDef = BodyDef()
+        val shape = PolygonShape()
+        val fDef = FixtureDef()
+        var body: Body
+
+        for (`object` in map.layers.get("walls").objects.getByType(RectangleMapObject::class.java)) {
+            val rect = (`object` as RectangleMapObject).rectangle
+
+            bDef.type = BodyDef.BodyType.StaticBody
+            bDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2)
+
+            body = world.createBody(bDef)
+
+            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2)
+            fDef.shape = shape
+            body.createFixture(fDef)
+            body.userData = "wall"
+        }
     }
 }
