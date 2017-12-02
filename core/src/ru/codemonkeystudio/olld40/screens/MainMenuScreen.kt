@@ -45,7 +45,7 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
             addListener(object : ClickListener() {
                 override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
                     super.touchUp(event, x, y, pointer, button)
-                    game.screen = GameScreen(game, 0)
+                    game.screen = GameScreen(game)
                 }
             })
         }

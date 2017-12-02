@@ -8,7 +8,7 @@ import ru.codemonkeystudio.olld40.screens.MainMenuScreen;
 import ru.codemonkeystudio.olld40.tools.ControlHandler;
 
 public class CMSGame extends Game {
-	public static final String APP_NAME = "MAGAZ";
+	public static final String APP_NAME = "NOT A VIRUS";
 
 	@Override
 	public void create () {

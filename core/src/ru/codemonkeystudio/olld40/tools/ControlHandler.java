@@ -45,6 +45,8 @@ public class ControlHandler implements ControllerListener {
         gamepadDownKeyJustPressed = false;
         gamepadLeftKeyJustPressed = false;
         gamepadRightKeyJustPressed = false;
+
+        dir();
     }
 
     @Override
@@ -119,8 +121,8 @@ public class ControlHandler implements ControllerListener {
 
     public static float dir() {
         if (gamepad) {
-            if (rStick.len() > Control.Gamepad.stickDeathZone)
-                angle = rStick.angleRad();
+            if (lStick.len() > Control.Gamepad.stickDeathZone)
+                angle = lStick.angleRad();
         }
         else {
             angle = new Vector2(Gdx.input.getX() - Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - Gdx.input.getY()).angleRad();
