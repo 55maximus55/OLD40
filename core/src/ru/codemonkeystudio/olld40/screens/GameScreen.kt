@@ -2,6 +2,7 @@ package ru.codemonkeystudio.olld40.screens
 
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
@@ -14,9 +15,10 @@ import ru.codemonkeystudio.olld40.tools.ContactListener
 import ru.codemonkeystudio.olld40.tools.ControlHandler
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
-
+import ru.codemonkeystudio.olld40.objects.Application
 
 
 class GameScreen(game: CMSGame) : Screen {
@@ -35,6 +37,9 @@ class GameScreen(game: CMSGame) : Screen {
 
     lateinit var grid : Grid
 
+    lateinit var antivirus : Application
+    lateinit var apps : ArrayList<Application>
+
     override fun show() {
         batch = SpriteBatch()
 
@@ -46,27 +51,35 @@ class GameScreen(game: CMSGame) : Screen {
 
         debugRenderer = Box2DDebugRenderer()
 
+        map = TmxMapLoader().load("map.tmx")
+        mapRenderer = OrthogonalTiledMapRenderer(map)
+        grid = Grid(map)
 
+
+        val rect = (map.layers.get("antivirus").objects.get(0) as RectangleMapObject).rectangle
         bDef = BodyDef()
         bDef.type = BodyDef.BodyType.KinematicBody
-        bDef.position.set(0f, 0f)
+        bDef.position.set(rect.x + rect.width / 2, rect.y + rect.height / 2)
+
+        camera.position.x = rect.x + rect.width / 2
+        camera.position.y = rect.y + rect.height / 2
 
         shape = CircleShape()
         shape.radius = 4f
         fDef = FixtureDef()
         fDef.shape = shape
 
-
-        map = TmxMapLoader().load("map.tmx")
-        mapRenderer = OrthogonalTiledMapRenderer(map)
-        grid = Grid()
-
         createWalls()
+
+        antivirus = Application(world, 0, Vector2(grid.grid[2][4].x, grid.grid[2][4].y))
+        antivirus.setCenter(grid.grid[2][4].x, grid.grid[2][4].y)
+
+        apps = ArrayList()
+        apps.add(Application(world, 1, grid.goTo()))
+        apps[0].setCenter(grid.grid[2][4].x, grid.grid[2][4].y + 150)
     }
 
     override fun render(delta: Float) {
-        camera.position.x = 0f
-        camera.position.y = 0f
         camera.update()
 
         world.step(delta, 10, 10)
@@ -82,7 +95,10 @@ class GameScreen(game: CMSGame) : Screen {
             body.linearVelocity = Vector2(100f, 0f).setAngleRad(ControlHandler.dir())
         }
 
-
+        batch.projectionMatrix = camera.combined
+        batch.begin()
+        antivirus.draw(batch)
+        batch.end()
     }
 
     override fun pause() {
