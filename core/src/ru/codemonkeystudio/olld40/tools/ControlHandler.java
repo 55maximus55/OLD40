@@ -162,7 +162,7 @@ public class ControlHandler implements ControllerListener {
                 return false;
         }
         else {
-            return Gdx.input.isKeyJustPressed(Control.Keyboard1.use) || Gdx.input.isKeyJustPressed(Control.Keyboard2.use);
+            return Gdx.input.isKeyJustPressed(Control.Keyboard1.use) || Gdx.input.isKeyJustPressed(Control.Keyboard2.use)|| Gdx.input.justTouched();
         }
     }
 

@@ -2,23 +2,19 @@ package ru.codemonkeystudio.olld40.screens
 
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import ru.codemonkeystudio.olld40.CMSGame
+import ru.codemonkeystudio.olld40.objects.Application
 import ru.codemonkeystudio.olld40.objects.Grid
 import ru.codemonkeystudio.olld40.tools.ContactListener
 import ru.codemonkeystudio.olld40.tools.ControlHandler
-import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
-import ru.codemonkeystudio.olld40.objects.Application
+import java.util.*
 
 
 class GameScreen(game: CMSGame) : Screen {
