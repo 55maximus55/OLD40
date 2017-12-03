@@ -56,6 +56,7 @@ public class Application extends Sprite {
         if (body.getPosition().dst(goTo) < 2) {
             a = false;
             body.setLinearVelocity(0, 0);
+            body.setUserData("AppI");
         }
     }
 
