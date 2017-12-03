@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.Align.center
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.codemonkeystudio.olld40.CMSGame
 import ru.codemonkeystudio.olld40.tools.ControlHandler
@@ -52,6 +53,11 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
             setFillParent(true)
         }
 
+        val table1 = Table().apply {
+            center()
+            setFillParent(true)
+        }
+
         val textButtonStyle = TextButton.TextButtonStyle().apply {
             this.font = font1
             up = game.skin.getDrawable("play_butt")
@@ -73,15 +79,19 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
         buttons.apply {
             add(startGameButton)
         }
+        var back = com.badlogic.gdx.scenes.scene2d.ui.Image(background)
+//        back.setPosition()
 
         table.apply {
-            add(startGameButton).row()
+            add(startGameButton)
+        }
+        table1.apply {
+            add(back)
         }
 
-        var back = com.badlogic.gdx.scenes.scene2d.ui.Image(background)
 
+        stage.addActor(table1)
         stage.addActor(table)
-        stage.addActor(back)
     }
 
     override fun render(delta: Float) {
