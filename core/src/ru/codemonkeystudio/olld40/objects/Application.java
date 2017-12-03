@@ -1,10 +1,12 @@
 package ru.codemonkeystudio.olld40.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import ru.codemonkeystudio.olld40.CMSGame;
 
 public class Application extends Sprite {
     public Body body;
@@ -28,7 +30,7 @@ public class Application extends Sprite {
 
         body = world.createBody(bDef);
 
-        shape.setRadius(16);
+        shape.setRadius(16 / CMSGame.SCALE);
         fDef.shape = shape;
         body.createFixture(fDef);
         body.setUserData("App");
@@ -43,19 +45,49 @@ public class Application extends Sprite {
             case 1:
                 setTexture(new Texture("icons/caller1.png"));
                 break;
+            case 2:
+                setTexture(new Texture("icons/chrome1.png"));
+                break;
+            case 3:
+                setTexture(new Texture("icons/cleaner1.png"));
+                break;
+            case 4:
+                setTexture(new Texture("icons/gallery1.png"));
+                break;
+            case 5:
+                setTexture(new Texture("icons/google1.png"));
+                break;
+            case 6:
+                setTexture(new Texture("icons/sms1.png"));
+                break;
+            case 7:
+                setTexture(new Texture("icons/trash1.png"));
+                break;
+            case 8:
+                setTexture(new Texture("icons/virus1.png"));
+                break;
         }
     }
 
     @Override
     public void setCenter(float x, float y) {
-        super.setCenter(x, y);
+        super.setCenter(x * CMSGame.SCALE, y * CMSGame.SCALE);
         if (a) {
             body.setTransform(x, y, 0);
-            body.setLinearVelocity(goTo.cpy().sub(body.getPosition()).setLength(100));
+            body.setLinearVelocity(goTo.cpy().sub(body.getPosition()).setLength(10));
+
+            if (body.getPosition().dst(goTo) < 2) {
+                a = false;
+                body.setLinearVelocity(0, 0);
+                body.setUserData("AppI");
+                if (appNum == 3 || appNum == 7 || appNum == 8)
+                    Gdx.audio.newSound(Gdx.files.internal("sounds/virus.wav")).play(0.25f);
+                else
+                    Gdx.audio.newSound(Gdx.files.internal("sounds/pip.wav")).play(0.25f);
+            }
         }
-        if (body.getPosition().dst(goTo) < 2) {
-            a = false;
-            body.setLinearVelocity(0, 0);
+        if (body.getUserData().equals("AppD")) {
+            body.setLinearVelocity(0, 100);
         }
     }
 

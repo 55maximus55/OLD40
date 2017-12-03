@@ -15,6 +15,7 @@ public class CMSGame extends Game {
 	public SpriteBatch batch;
 	private TextureAtlas atlas;
 	public Skin skin;
+	public static final float SCALE = 8f;
 
 	@Override
 	public void create () {
