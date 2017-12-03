@@ -36,6 +36,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <imagelayer name="background" offsetx="-320" offsety="224">
+  <image source="icons/background.png" width="2048" height="1024"/>
+ </imagelayer>
  <imagelayer name="wallpaper" offsetx="79" offsety="560">
   <image source="icons/wallpaper.png" width="192" height="442"/>
  </imagelayer>
