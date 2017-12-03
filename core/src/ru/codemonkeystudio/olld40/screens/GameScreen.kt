@@ -1,5 +1,7 @@
 package ru.codemonkeystudio.olld40.screens
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -54,15 +56,16 @@ class GameScreen(game: CMSGame) : Screen {
 
         val rect = (map.layers.get("antivirus").objects.get(0) as RectangleMapObject).rectangle
         bDef = BodyDef()
+        shape = CircleShape()
+        fDef = FixtureDef()
+
         bDef.type = BodyDef.BodyType.KinematicBody
         bDef.position.set(rect.x + rect.width / 2, rect.y + rect.height / 2)
 
         camera.position.x = rect.x + rect.width / 2
         camera.position.y = rect.y + rect.height / 2
 
-        shape = CircleShape()
         shape.radius = 4f
-        fDef = FixtureDef()
         fDef.shape = shape
 
         createWalls()
@@ -71,8 +74,6 @@ class GameScreen(game: CMSGame) : Screen {
         antivirus.setCenter(grid.grid[2][4].x, grid.grid[2][4].y)
 
         apps = ArrayList()
-        apps.add(Application(world, 1, grid.goTo()))
-        apps[0].setCenter(grid.grid[2][4].x, grid.grid[2][4].y + 150)
     }
 
     override fun render(delta: Float) {
@@ -91,9 +92,16 @@ class GameScreen(game: CMSGame) : Screen {
             body.linearVelocity = Vector2(100f, 0f).setAngleRad(ControlHandler.dir())
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            spawnApp()
+
         batch.projectionMatrix = camera.combined
         batch.begin()
         antivirus.draw(batch)
+        for (i in apps) {
+            i.draw(batch)
+            i.setCenter(i.body.position.x, i.body.position.y)
+        }
         batch.end()
     }
 
@@ -131,5 +139,10 @@ class GameScreen(game: CMSGame) : Screen {
             body.createFixture(fDef)
             body.userData = "wall"
         }
+    }
+
+    private fun spawnApp() {
+        apps.add(Application(world, 1, grid.goTo()))
+        apps[apps.size-1].setCenter(grid.grid[2][0].x, grid.grid[2][0].y + 40)
     }
 }

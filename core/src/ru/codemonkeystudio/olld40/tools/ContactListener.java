@@ -17,7 +17,8 @@ public class ContactListener implements com.badlogic.gdx.physics.box2d.ContactLi
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-
+        if (contact.getFixtureA().getBody().getUserData().equals("App") && contact.getFixtureB().getBody().getUserData().equals("App"))
+            contact.setEnabled(false);
     }
 
     @Override
