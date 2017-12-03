@@ -2,6 +2,7 @@ package ru.codemonkeystudio.olld40.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -19,14 +20,22 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
 
     private lateinit var stage: Stage
     private lateinit var camera: OrthographicCamera
+    private lateinit var font1: BitmapFont
+
 
     private lateinit var buttons: ArrayList<Button>
+
+    private lateinit var sound: Sound
 
     private var cursor = -1
     private var x = 0
     private var y = 0
 
     override fun show() {
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/select.wav"))
+
+        font1 = BitmapFont(Gdx.files.internal("font/roboto.fnt"), Gdx.files.internal("font/roboto.png"), false)
+
         camera = OrthographicCamera()
         stage = Stage(FitViewport(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat(), camera))
         Gdx.input.inputProcessor = stage
@@ -37,10 +46,18 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
         }
 
         val textButtonStyle = TextButton.TextButtonStyle().apply {
-            font = BitmapFont()
-            pressedOffsetX = 7f
-            checkedOffsetX = 5f
+            this.font = font1
+            up = game.skin.getDrawable("play_butt")
+            down = game.skin.getDrawable("play_butt")
+            pressedOffsetX = 1f
+            pressedOffsetY = -1f
         }
+
+//        val textButtonStyle = TextButton.TextButtonStyle().apply {
+//            font = BitmapFont()
+//            pressedOffsetX = 7f
+//            checkedOffsetX = 5f
+//        }
 
         val startGameButton = TextButton("Start game", textButtonStyle).apply {
             addListener(object : ClickListener() {
