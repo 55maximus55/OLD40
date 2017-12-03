@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import ru.codemonkeystudio.olld40.CMSGame
 import ru.codemonkeystudio.olld40.objects.Application
 import ru.codemonkeystudio.olld40.objects.Grid
@@ -30,6 +31,7 @@ class GameScreen(private val game: CMSGame) : Screen {
     lateinit var shape : CircleShape
     lateinit var bDef : BodyDef
     lateinit var fDef : FixtureDef
+
 
     lateinit var map : TiledMap
     lateinit var mapRenderer : OrthogonalTiledMapRenderer
