@@ -78,7 +78,10 @@ class MainMenuScreen(private val game: CMSGame) : Screen {
             add(startGameButton).row()
         }
 
+        var back = com.badlogic.gdx.scenes.scene2d.ui.Image(background)
+
         stage.addActor(table)
+        stage.addActor(back)
     }
 
     override fun render(delta: Float) {
