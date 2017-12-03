@@ -22,7 +22,12 @@ public class ContactListener implements com.badlogic.gdx.physics.box2d.ContactLi
         if (contact.getFixtureA().getBody().getUserData().equals("AppI") || contact.getFixtureB().getBody().getUserData().equals("AppI"))
             contact.setEnabled(false);
 
-
+        if ((contact.getFixtureA().getBody().getUserData().equals("App") || contact.getFixtureB().getBody().getUserData().equals("App")) && (contact.getFixtureA().getBody().getUserData().equals("bullet") || contact.getFixtureB().getBody().getUserData().equals("bullet"))) {
+            if (contact.getFixtureA().getBody().getUserData().equals("App"))
+                contact.getFixtureA().getBody().setUserData("AppD");
+            else
+                contact.getFixtureB().getBody().setUserData("AppD");
+        }
     }
 
     @Override

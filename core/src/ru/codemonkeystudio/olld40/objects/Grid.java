@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.codemonkeystudio.olld40.CMSGame;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,7 +19,7 @@ public class Grid {
             Rectangle rect = mapObject.getRectangle();
             grid
                     [Integer.parseInt(mapObject.getName().substring(0, 1))]
-                    [Integer.parseInt(mapObject.getName().substring(1, 2))] = new Tile(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2, -1);
+                    [Integer.parseInt(mapObject.getName().substring(1, 2))] = new Tile((rect.getX() + rect.getWidth() / 2) / CMSGame.SCALE, (rect.getY() + rect.getHeight() / 2) / CMSGame.SCALE, -1);
         }
         grid[2][4].app = 0;
     }

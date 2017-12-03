@@ -61,12 +61,12 @@ class GameScreen(private val game: CMSGame) : Screen {
         fDef = FixtureDef()
 
         bDef.type = BodyDef.BodyType.KinematicBody
-        bDef.position.set(rect.x + rect.width / 2, rect.y + rect.height / 2)
+        bDef.position.set(rect.x + rect.width / 2, rect.y + rect.height / 2).scl(1 / CMSGame.SCALE)
 
         camera.position.x = rect.x + rect.width / 2
         camera.position.y = rect.y + rect.height / 2
 
-        shape.radius = 4f
+        shape.radius = 4f / CMSGame.SCALE
         fDef.shape = shape
 
         createWalls()
@@ -90,7 +90,7 @@ class GameScreen(private val game: CMSGame) : Screen {
             val body = world.createBody(bDef)
             body.createFixture(fDef)
             body.userData = "bullet"
-            body.linearVelocity = Vector2(100f, 0f).setAngleRad(ControlHandler.dir())
+            body.linearVelocity = Vector2(1000f, 0f).setAngleRad(ControlHandler.dir())
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
@@ -117,15 +117,15 @@ class GameScreen(private val game: CMSGame) : Screen {
         mapRenderer.renderImageLayer(map.layers.get("phone") as TiledMapImageLayer?)
         mapRenderer.batch.end()
 
-        var b = true
+        var b = 0
         for (y in 0..4) {
             for (x in 0..4) {
                 if (grid.grid[x][y].app == -1)
-                    b = false
+                    b++
             }
         }
 
-        if (b)
+        if (b <= 0)
             game.screen = MainMenuScreen(game)
     }
 
@@ -154,11 +154,11 @@ class GameScreen(private val game: CMSGame) : Screen {
             val rect = (`object` as RectangleMapObject).rectangle
 
             bDef.type = BodyDef.BodyType.StaticBody
-            bDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2)
+            bDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2).scl(1 / CMSGame.SCALE)
 
             body = world.createBody(bDef)
 
-            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2)
+            shape.setAsBox(rect.getWidth() / 2 / CMSGame.SCALE, rect.getHeight() / 2 / CMSGame.SCALE)
             fDef.shape = shape
             body.createFixture(fDef)
             body.userData = "wall"
@@ -166,7 +166,7 @@ class GameScreen(private val game: CMSGame) : Screen {
     }
 
     private fun spawnApp() {
-        apps.add(Application(world, 1, grid.goTo()))
-        apps[apps.size-1].setCenter(grid.grid[2][0].x, grid.grid[2][0].y + 40)
+        apps.add(Application(world, Random().nextInt(7) + 1, grid.goTo()))
+        apps[apps.size-1].setCenter(grid.grid[2][0].x, grid.grid[2][0].y + 40 / CMSGame.SCALE)
     }
 }

@@ -9,6 +9,7 @@ import ru.codemonkeystudio.olld40.tools.ControlHandler;
 
 public class CMSGame extends Game {
 	public static final String APP_NAME = "NOT A VIRUS";
+	public static final float SCALE = 8f;
 
 	@Override
 	public void create () {
