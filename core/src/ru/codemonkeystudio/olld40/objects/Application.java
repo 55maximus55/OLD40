@@ -74,9 +74,9 @@ public class Application extends Sprite {
         super.setCenter(x * CMSGame.SCALE, y * CMSGame.SCALE);
         if (a) {
             body.setTransform(x, y, 0);
-            body.setLinearVelocity(goTo.cpy().sub(body.getPosition()).setLength(10));
+            body.setLinearVelocity(goTo.cpy().sub(body.getPosition()).setLength(15));
 
-            if (body.getPosition().dst(goTo) < 2) {
+            if (body.getPosition().dst(goTo) < 0.1f) {
                 a = false;
                 body.setLinearVelocity(0, 0);
                 body.setUserData("AppI");

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -12,14 +13,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import ru.codemonkeystudio.olld40.CMSGame
 import ru.codemonkeystudio.olld40.objects.Application
+import ru.codemonkeystudio.olld40.objects.Bullet
 import ru.codemonkeystudio.olld40.objects.Grid
 import ru.codemonkeystudio.olld40.tools.ContactListener
 import ru.codemonkeystudio.olld40.tools.ControlHandler
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 class GameScreen(private val game: CMSGame) : Screen {
     lateinit var batch : SpriteBatch
@@ -40,6 +41,10 @@ class GameScreen(private val game: CMSGame) : Screen {
 
     lateinit var antivirus : Application
     lateinit var apps : ArrayList<Application>
+    lateinit var bullets : ArrayList<Bullet>
+
+    var timer = 0.5f
+    var timerShoot = 0.3f
 
     override fun show() {
         batch = SpriteBatch()
@@ -77,9 +82,13 @@ class GameScreen(private val game: CMSGame) : Screen {
         antivirus.setCenter(grid.grid[2][4].x, grid.grid[2][4].y)
 
         apps = ArrayList()
+        bullets = ArrayList()
     }
 
     override fun render(delta: Float) {
+        timer -= delta
+        timerShoot -= delta
+
         camera.update()
 
         world.step(delta, 10, 10)
@@ -88,15 +97,20 @@ class GameScreen(private val game: CMSGame) : Screen {
         mapRenderer.render()
         debugRenderer.render(world, camera.combined)
 
-        if (ControlHandler.useKeyJustPressed()) {
+        if (ControlHandler.useKeyJustPressed() && timerShoot <= 0) {
             val body = world.createBody(bDef)
             body.createFixture(fDef)
             body.userData = "bullet"
             body.linearVelocity = Vector2(1000f, 0f).setAngleRad(ControlHandler.dir())
+
+            bullets.add(Bullet(Texture("icons/bullet.png"), body))
+            timerShoot = 1.2f
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || timer <= 0f) {
             spawnApp()
+            timer += 1f
+        }
 
         batch.projectionMatrix = camera.combined
         batch.begin()
@@ -107,12 +121,16 @@ class GameScreen(private val game: CMSGame) : Screen {
             if (!i.a) {
                 for (y in 0..4) {
                     for (x in 0..4) {
-                        if (i.body.position.dst(Vector2(grid.grid[x][y].x, grid.grid[x][y].y)) < 3f) {
+                        if (i.body.position.dst(Vector2(grid.grid[x][y].x, grid.grid[x][y].y)) < 1f) {
                             grid.grid[x][y].app = i.appNum
                         }
                     }
                 }
             }
+        }
+        for (i in bullets) {
+            i.setPosition(i.body.position.x * CMSGame.SCALE, i.body.position.y * CMSGame.SCALE)
+            i.draw(batch)
         }
         batch.end()
         mapRenderer.batch.begin()
